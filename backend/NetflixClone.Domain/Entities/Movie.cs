@@ -10,5 +10,7 @@ public class Movie
 
     public string ThumbnailUrl { get; set; } = string.Empty;
 
-    public string VideoUrl { get; set; } = string.Empty;  
+    public string VideoUrl { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;  
 }
