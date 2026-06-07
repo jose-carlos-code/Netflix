@@ -1,8 +1,32 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using NetflixClone.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// adicionando configurações de banco de dados
+
+// Aqui ele abre o arquivo appsettings.json, pega a seção "ConnectionStrings", 
+// e dentro dela pega a string de conexão chamada "DefaultConnection". 
+// Essa string de conexão é usada para configurar o acesso ao banco de dados MySQL.
+var connectionString =
+    builder.Configuration.GetConnectionString(
+        "DefaultConnection"
+    );
+
+
+// Sempre que alguém precisar de AppDbContext, crie uma instância para ele
+builder.Services.AddDbContext<AppDbContext>(
+    options =>
+    {
+        options.UseMySql(
+            connectionString,
+            ServerVersion.AutoDetect(connectionString)
+        );
+    }
+);
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!);
 
@@ -15,7 +39,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters()
         {
+            // Verifique se o token foi assinado pela minha chave secreta.
             ValidateIssuerSigningKey = true,
+            // Qual chave secreta deve ser usada
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = false,
             ValidateAudience = false,
@@ -40,23 +66,25 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// CÓDIGOS ABAIXO SÃO APENAS EXEMPLOS DE ENDPOINTS, EU POSSO APAGÁ-LOS E CRIAR OS MEUS PRÓPRIOS
+
+// app.MapGet("/weatherforecast", () =>
+// {
+//     var forecast =  Enumerable.Range(1, 5).Select(index =>
+//         new WeatherForecast
+//         (
+//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+//             Random.Shared.Next(-20, 55),
+//             summaries[Random.Shared.Next(summaries.Length)]
+//         ))
+//         .ToArray();
+//     return forecast;
+// })
+// .WithName("GetWeatherForecast");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+// {
+//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+// }
