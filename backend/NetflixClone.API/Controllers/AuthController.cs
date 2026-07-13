@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 public class AuthController : ControllerBase
 {
     [HttpPost("login")]
-    public IActionResult Login(LoginDto request)
+    public IActionResult Login(LoginRequest request)
     {
         return Ok();
     }
