@@ -12,7 +12,7 @@ public class MoviesController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("{id}")]
+    [HttpGet("{id}")]
     public IActionResult getMovieById( Guid id)
     {
         return Ok();

@@ -4,9 +4,9 @@ using NetflixClone.Domain.Interfaces;
 using NetflixClone.Infrastructure.Data;
 
 
-namespace NetflixClone.Infraestructure.Repositories;
+namespace NetflixClone.Infrastructure.Repositories;
 
-public class UserRepositoy : IUserRepository
+public class UserRepository : IUserRepository
 {
     // readonly indica que a variável não pode ser alterada após a sua inicialização
     // só pode ser atribuído no contrutor, depois é imutável
